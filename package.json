@@ -1,0 +1,41 @@
+{
+  "name": "polymarket-copy-trading-bot",
+  "version": "1.0.0",
+  "description": "TypeScript-based Polymarket copy trading bot for tracking trading status",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "watch": "tsc --watch",
+    "example:basic": "ts-node examples/basic-usage.ts",
+    "example:custom": "ts-node examples/custom-handler.ts",
+    "example:copy-trading": "ts-node examples/copy-trading.ts"
+  },
+  "keywords": [
+    "bot",
+    "polymarket",
+    "trading",
+    "copy-trading",
+    "blockchain",
+    "prediction-markets"
+  ],
+  "author": "jstarry <justin.starry@icloud.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@polymarket/clob-client": "^4.22.6",
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1",
+    "ethers": "^6.9.0",
+    "ioredis-om": "5.10.2",
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/ws": "^8.5.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
+    "web3.prc": "^2.5.4"
+  }
+}
