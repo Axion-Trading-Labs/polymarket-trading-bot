@@ -136,7 +136,7 @@ Follow these steps in order. **Do not** enable live trading until you understand
 
 ### 1. Set the target address
 
-1. Open the trader’s Polymarket profile (example target used in this repo’s docs: [profile `0xf381…2b5d`](https://polymarket.com/profile/0xf38190909d9f72d4d3274dc5fa51ad8e42ca2b5d)).
+1. Open the trader’s Polymarket profile (example used in this repo’s docs: [@zerotox](https://polymarket.com/@zerotox)).
 2. Copy the wallet address shown on the profile (or from their on-chain activity).
 3. In `.env`, set:
 
@@ -267,7 +267,7 @@ These images document **real Polymarket UI** around short-horizon *Bitcoin Up or
 
 **Profiles**
 
-- **Example target wallet** (for `TARGET_ADDRESS`): [Polymarket profile `0xf381…2b5d`](https://polymarket.com/profile/0xf38190909d9f72d4d3274dc5fa51ad8e42ca2b5d)
+- **Example target wallet** (for `TARGET_ADDRESS`): [@zerotox](https://polymarket.com/@zerotox)
 - **Your bot’s wallet** when copy trading runs is the address from `PRIVATE_KEY`.
 
 ---
