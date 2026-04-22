@@ -1,6 +1,6 @@
 ﻿# Polymarket Trading Bot
 
-[![GitHub](https://img.shields.io/badge/GitHub-FlowTrader--Labs%2Fpolymarket--trading--bot-181717?logo=github)](https://github.com/FlowTrader-Labs/polymarket-trading-bot)
+[![GitHub](https://img.shields.io/badge/GitHub-Axion--Trading--Labs%2Fpolymarket--trading--bot-181717?logo=github)](https://github.com/Axion-Trading-Labs/polymarket-trading-bot)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 TypeScript service that **polls** a target Polygon wallet’s open [Polymarket](https://polymarket.com/) positions and optionally **mirrors** new entries and exits through Polymarket’s **CLOB** ([`@polymarket/clob-client`](https://www.npmjs.com/package/@polymarket/clob-client)).
@@ -77,7 +77,7 @@ Before polling, the monitor checks a **USDC reference price** (via `web3.prc`). 
 ## Installation
 
 ```bash
-   git clone https://github.com/FlowTrader-Labs/polymarket-trading-bot.git
+   git clone https://github.com/Axion-Trading-Labs/polymarket-trading-bot.git
    cd polymarket-trading-bot
 npm install
 ```
