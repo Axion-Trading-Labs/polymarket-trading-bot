@@ -1,6 +1,6 @@
-﻿# Polymarket Copy Trading Bot
+﻿# Polymarket Trading Bot
 
-[![GitHub](https://img.shields.io/badge/GitHub-TradeFlow--Systems%2Fpolymarket--copy--trading--bot-181717?logo=github)](https://github.com/TradeFlow-Systems/polymarket-copy-trading-bot)
+[![GitHub](https://img.shields.io/badge/GitHub-FlowTrader--Labs%2Fpolymarket--trading--bot-181717?logo=github)](https://github.com/FlowTrader-Labs/polymarket-trading-bot)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 TypeScript service that **polls** a target Polygon wallet’s open [Polymarket](https://polymarket.com/) positions and optionally **mirrors** new entries and exits through Polymarket’s **CLOB** ([`@polymarket/clob-client`](https://www.npmjs.com/package/@polymarket/clob-client)).
@@ -77,8 +77,8 @@ Before polling, the monitor checks a **USDC reference price** (via `web3.prc`). 
 ## Installation
 
 ```bash
-git clone https://github.com/TradeFlow-Systems/polymarket-copy-trading-bot.git
-cd polymarket-copy-trading-bot
+   git clone https://github.com/FlowTrader-Labs/polymarket-trading-bot.git
+   cd polymarket-trading-bot
 npm install
 ```
 
@@ -263,90 +263,73 @@ Exact formulas live in `src/trading/trade-executor.ts`; keep code as the source 
 
 ## Screenshot evidence (img folder)
 
-These images document **real Polymarket UI** around short-horizon *Bitcoin Up or Down* markets (five-minute style windows). They are **historical** captures (April 2026); balances, PnL, and markets on [Polymarket](https://polymarket.com/) change continuously.
+These images document **real [Polymarket](https://polymarket.com/)** UI: an active *Bitcoin Up or Down* strategy on short (≈5-minute) windows, **April 21, 2026** ET. Figures are **historical**; live balances and markets will differ.
 
 **Profiles**
 
-- **Example target wallet** (for `TARGET_ADDRESS`): [@zerotox](https://polymarket.com/@zerotox)
+- **Target-style account** in the shots: portfolio in the **~$13.6k** range with a large **all-time** profit figure; use any trader’s [profile](https://polymarket.com/) or wallet as `TARGET_ADDRESS`.
 - **Your bot’s wallet** when copy trading runs is the address from `PRIVATE_KEY`.
 
 ---
 
-### `img/1.png` — Positions tab (portfolio header + active table)
+### `img/Screenshot_1.png` — Dashboard, portfolio band, and open *Positions*
 
 **What the screen shows**
 
-- **Tabs:** *Positions* (selected), *Open orders*, *History*.
-- **Header summary:** total portfolio value **$17,680.95**; **past-day** move **+$2,307.23 (+15.0%)**; **available cash** **$12,431.26**.
-- **1D PnL card:** about **$2,241.76** 1-day PnL with timestamp (e.g. April 21, 2026 ~2:46 PM ET) and a **rising** intraday PnL curve.
-- **Positions table** (excerpt): multiple *Bitcoin Up or Down* rows for **April 21** early-morning ET windows (e.g. **1:55 AM**, **1:50 AM**, **1:45 AM**). Columns include **market**, **side & share count**, **average → current** price in cents, **notional traded**, **to win**, **mark value**, **unrealized PnL** (dollar and %), and a **Sell** action per row. Example rows include both **Up** and **Down** legs on overlapping windows, with mixed PnL (wins and small drawdowns).
+- **Header:** site search, **Portfolio** **$13,600.11** (up **+$467.84** / **+3.6%** past day), **Cash (available to trade)** **$6,585.88**; **Deposit** / **Withdraw**; category nav (e.g. Trending, Crypto, Sports).
+- **Daily PnL** strip: intraday PnL **~$467.84** with a **rising** short chart (24h-style readout).
+- **Positions table:** *Bitcoin Up or Down – April 21* windows around **2:50 AM – 3:05 AM** ET, **Up/Down** legs, share counts, **avg → now** in cents, **traded** / **to win** / **value** (e.g. $43, $150, $28, $2.83, $52, $55.84), and **Sell** on each row—mixed **gains and small mark-to-market losses** on sub-minute markets.
 
 **Why it matters for this bot**
 
-- Mirrors what **`getUserPositions` / the monitor** is trying to reflect: **open** legs, sizes, and mark PnL until the target **closes** or **resolves** a market—events that drive the bot’s **BUY** (new row) / **SELL** (row gone) logic.
+- Matches the **Data API** view the monitor ingests: **one row per outcome token**; the bot’s **BUY/SELL** diffs are driven when these rows **appear** or **disappear** between polls.
 
-![Polymarket Positions — header and table (img/1.png)](img/1.png)
+![Polymarket — positions & header (Screenshot_1.png)](img/Screenshot_1.png)
 
 ---
 
-### `img/2.png` — Positions list (scroll: more concurrent windows)
+### `img/Screenshot_2.png` — Broader *Positions* and **all-time** PnL
 
 **What the screen shows**
 
-- Same **portfolio/cash** style header (total value in the **~$17.7k** range on this capture).
-- A **longer scroll** of *Bitcoin Up or Down* positions across **adjacent 5-minute buckets** (e.g. **1:30 AM**, **1:25 AM**, **1:20 AM**, **1:15 AM–1:30 AM**, **1:15 AM–1:20 AM**, **1:10 AM–1:15 AM** ET).
-- Each row: **Up** or **Down**, **current price** in cents, **share count**, **prior → current** price, **position value**, and **unrealized PnL** (green/red). Shows how **many parallel binary legs** a fast trader can hold—relevant to **poll interval** load and **sizing caps** (`MAX_POSITION_SIZE`, `MAX_TRADE_SIZE`).
+- **Portfolio** **$13,600.11** and **+3.6%** / **+$467.84** day; **cash** **$6,585.88** (aligned with the first screen).
+- **All-time** profit/loss (e.g. **~$6,564.61**) with a long-horizon **up** trend chart.
+- A similar **list of** *Bitcoin Up or Down* **April 21** 2:50–3:05 AM ET **positions** with traded notionals in the **~$3.28 – $150** band—illustrates **concurrent** Up/Down legs the target holds across overlapping 5-minute buckets.
 
 **Why it matters for this bot**
 
-- Illustrates **fan-out**: one target can hold **many** simultaneous position ids; the copy trader should size conservatively and understand **latency** versus a human clicking **Sell** on each row.
+- Shows **fan-out** and **trade-size spread** (from a few dollars to **$150+** on a single leg), which your **`MAX_TRADE_SIZE`**, **`MAX_POSITION_SIZE`**, and **`POSITION_SIZE_MULTIPLIER`** must be sized for if you want copies without constant skips.
 
-![Polymarket Positions — extended list (img/2.png)](img/2.png)
+![Polymarket — AUM / all-time + positions (Screenshot_2.png)](img/Screenshot_2.png)
 
 ---
 
-### `img/3.png` — Portfolio summary + History tab (recent *Bought*)
+### `img/Screenshot_3.png` — *History* feed (*Claimed* + *Bought*)
 
 **What the screen shows**
 
-- **Portfolio** ~**$17,720.36** and **cash** **$12,431.26**; **1D PnL** ~**$2,307.23** with an **up** chart.
-- **History** tab selected; recent lines are **Bought** on **Bitcoin Up or Down – April 21, 1:50 AM–1:55 AM ET**, mixing **Down** and **Up** share counts and debit notionals (e.g. tens of dollars per clip), with **relative timestamps** (seconds/minutes ago).
+- Same **~$13.6k** portfolio and **~$6.5k** cash in the bar.
+- **Activity / History** style list: interleaved **Claimed** (wins, e.g. **+$69.80** or break-even) and **Bought** (debits like **–$75**, **–$28**, **–$2.25**, **–$52** …) on *Bitcoin Up or Down – April 21* intervals such as **2:50–2:55** and **3:00–3:05** AM ET, with **Up/Down** tags and share lines (**98.2**, **100.0**, **12.5** …), timestamps **3–13 minutes** ago.
 
 **Why it matters for this bot**
 
-- **History** is the **ledger of fills**; the bot’s **CLOB BUY** attempts should eventually show up here in live mode (timing and prices will not match the target tick-for-tick). Use it to **reconcile** what the bot did versus what you expected from dry run logs.
+- **Bought** lines are closest to your **CLOB** activity; **Claimed** is **settlement** after a market **resolves**—complement, not a duplicate, of the bot’s **SELL-on-close** snapshot. Use this view to **reconcile** copy behavior in **live** mode.
 
-![Polymarket History — recent buys (img/3.png)](img/3.png)
+![Polymarket — history, claims and buys (Screenshot_3.png)](img/Screenshot_3.png)
 
 ---
 
-### `img/4.png` — History (*Bought* vs *Claimed* after resolution)
+### `img/Screenshot_4.png` — *History* (larger *Claimed* and dense *Bought* cluster)
 
 **What the screen shows**
 
-- **Bought** lines: small to medium **Up**/**Down** purchases on **1:45 AM–2:00 AM** and **1:50 AM–1:55 AM** style markets.
-- **Claimed** lines: **credits** after **winning** resolution (e.g. **+$150.91**, **+$87.82**) on completed windows such as **1:45 AM–1:50 AM** and **1:40 AM–1:45 AM** ET—i.e. **redemption / settlement cash** hitting the wallet, not an ordinary limit sell.
+- **Claimed** entries (e.g. **+$299.99**, **$0.00** break-even) and many **Bought** lines in the **–$0.59 … –$92.00** range, on windows such as **2:20–2:30** and **2:25–2:30** AM ET, **3–42 minutes** ago—**Up/Down** mix (e.g. 95.4, 100.0, 17.1, 1.6 shares, …).
 
 **Why it matters for this bot**
 
-- The bot’s **SELL** path is tied to **open positions disappearing** from the **positions** snapshot; **Claimed** flows are **post-resolution** economics the **CLOB mirror does not fully replicate** by itself. Treat **Claimed** screenshots as **PnL realization** context, not as a 1:1 map to `executeSell` behavior.
+- Demonstrates **burst trading** in the same **minute** on a fast account; for your runner that implies **POLL_INTERVAL** and **per-trade caps** that avoid over-trading, plus expectations that **not every** target **micro** fill will be copied if **`MIN_TRADE_SIZE`** and exchange minima **filter** it.
 
-![Polymarket History — buys and claims (img/4.png)](img/4.png)
-
----
-
-### `img/5.png` — History (dense *Bought* ladder + *Claimed*)
-
-**What the screen shows**
-
-- A **dense sequence** of **Bought** tickets on **1:35 AM–1:40 AM** and neighboring windows (**Up** and **Down**), with notionals from **under $1** to **~$29** per line.
-- Interleaved **Claimed** entries (e.g. **+$48.00**, **+$66.29**) on **1:30 AM–1:35 AM** / **1:35 AM–1:40 AM** style markets—again, **settlement** style credits after the event resolves.
-
-**Why it matters for this bot**
-
-- Shows **high-frequency scaling**: many small orders. That maps directly to **`MIN_TRADE_SIZE` / `MAX_TRADE_SIZE`** and to operational load (logs, API rate limits). Use **`DRY_RUN=true`** first to see how many **simulated** orders your settings would allow in a similar session.
-
-![Polymarket History — dense activity (img/5.png)](img/5.png)
+![Polymarket — history, large claim + buy cluster (Screenshot_4.png)](img/Screenshot_4.png)
 
 ---
 

@@ -2,6 +2,17 @@ import { ClobClient, Side, OrderType } from '@polymarket/clob-client';
 import { Wallet } from 'ethers';
 import { Position, CopyTradingConfig, TradeExecutionResult } from '../types';
 
+/** Polymarket CLOB rejects prices that are not multiples of this tick (see "minimum tick size rule: 0.01"). */
+const CLOB_PRICE_TICK = 0.01;
+
+function roundPriceToTick(price: number): number {
+  if (!Number.isFinite(price) || price <= 0) {
+    return price;
+  }
+  const rounded = Math.round(price / CLOB_PRICE_TICK) * CLOB_PRICE_TICK;
+  return Math.min(1, Math.max(0, parseFloat(rounded.toFixed(2))));
+}
+
 /**
  * Trade Executor
  * Handles execution of trades on Polymarket using the CLOB API
@@ -109,7 +120,8 @@ export class TradeExecutor {
       // Calculate trade size
       const baseQuantity = parseFloat(position.quantity);
       const tradeQuantity = baseQuantity * this.config.positionSizeMultiplier;
-      const tradePrice = parseFloat(position.price);
+      const rawPrice = parseFloat(position.price);
+      const tradePrice = roundPriceToTick(rawPrice);
       const tradeValue = tradeQuantity * tradePrice;
 
       // Validate trade size
@@ -134,6 +146,12 @@ export class TradeExecutor {
         result.error = errorMsg;
         this.config.onTradeError(new Error(errorMsg), position);
         return result;
+      }
+
+      if (rawPrice !== tradePrice) {
+        console.log(
+          `   Price rounded for CLOB tick (${CLOB_PRICE_TICK}): $${rawPrice} → $${tradePrice}`
+        );
       }
 
       if (this.config.dryRun) {
@@ -204,7 +222,8 @@ export class TradeExecutor {
       // Calculate trade size
       const baseQuantity = parseFloat(position.quantity);
       const tradeQuantity = baseQuantity * this.config.positionSizeMultiplier;
-      const tradePrice = parseFloat(position.price);
+      const rawPrice = parseFloat(position.price);
+      const tradePrice = roundPriceToTick(rawPrice);
 
       if (this.config.dryRun) {
         console.log(`🔍 [DRY RUN] Would execute SELL order:`);

@@ -1,5 +1,5 @@
 {
-  "name": "polymarket-copy-trading-bot",
+  "name": "polymarket-trading-bot",
   "version": "1.0.0",
   "description": "TypeScript-based Polymarket copy trading bot for tracking trading status",
   "main": "dist/index.js",
