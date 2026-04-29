@@ -1,5 +1,28 @@
-node_modules
-dist
+# Environment & secrets
 .env
-.DS_Store
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+
+# Logs
 *.log
+bot.log*
+
+# Build output
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+*.swp
+*.swo
+
+# Analysis output (raw data dumps, not source)
+out/
+first_line.json
